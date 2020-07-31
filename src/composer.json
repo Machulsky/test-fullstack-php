@@ -6,9 +6,6 @@
             "email": "petr.machulskiy@gmail.com"
         }
     ],
-    "require": {
-        "laravel/framework": "^7.22"
-    },
 
     "autoload": {
         "psr-4":{
