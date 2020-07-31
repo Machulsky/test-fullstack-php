@@ -1,55 +1,63 @@
-version: '3'
+version: "3.3"
+
+networks:
+  backend-network:
+    driver: bridge
+
 services:
-  app:
-    build:
-      context: .
-      dockerfile: docker/app.Dockerfile
-    image: digitalocean.com/php
-    container_name: app
-    restart: unless-stopped
-    tty: true
-    environment:
-      SERVICE_NAME: app
-      SERVICE_TAGS: dev
-    working_dir: /var/www
-    volumes:
-      - ./src:/var/www
-      - ./conf/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    networks:
-      - app-network
-  webserver:
-    image: nginx:alpine
-    container_name: webserver
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "8080:80"
-      - "8443:443"
-    volumes:
-      - ./src:/var/www
-      - ./conf/nginx/conf.d/:/etc/nginx/conf.d/
-    networks:
-      - app-network
+  nginx:
+      container_name: nginx
+      build:
+        context: .
+        dockerfile: docker/Nginx.Dockerfile
+      ports:
+          - 8001:80
+      depends_on:
+        - fpm
+      networks:
+        - backend-network
+      volumes:
+        - ./src:/var/www
+  fpm:
+      image: digitalocean.com/php
+      container_name: app
+      build:
+        context: .
+        dockerfile: docker/Fpm.Dockerfile
+      volumes:
+        - ./src:/var/www
+      restart: always
+      working_dir: /var/www
+      environment:
+        REDIS_HOST: redis
+        REDIS_PORT: &redis-port 6379
+      depends_on:
+        - redis
+      networks:
+        - backend-network
+  redis:
+      image: redis:alpine
+      container_name: redis
+      command: redis-server
+      volumes:
+          - ./data/redis:/data
+      ports: [*redis-port, '16379:6379']
+      networks:
+        - backend-network
+  
   db:
     image: mysql:5.7.22
     container_name: db
     restart: unless-stopped
     tty: true
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_DATABASE: tweets
-      MYSQL_ROOT_PASSWORD: root123password
+      MYSQL_ROOT_PASSWORD: your_mysql_root_password
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
-      - ./dbdata:/var/lib/mysql/
-      - ./conf/mysql/my.cnf:/etc/mysql/my.cnf
+      - ./data/mysql:/var/lib/mysql/
     networks:
-      - app-network
-networks:
-  app-network:
-    driver: bridge
-volumes:
-  dbdata:
-    driver: local
+      - backend-network
