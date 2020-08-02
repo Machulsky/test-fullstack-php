@@ -18,7 +18,7 @@ services:
   worker:
       image: digitalocean.com/php
       container_name: app-worker
-      command: php workers/TweetCreateListener.php --sleep=3 --tries=3 --daemon
+      command: composer install && php workers/TweetCreateListener.php --sleep=3 --tries=3 --daemon
       volumes:
         - ./src:/var/www
       restart: always
