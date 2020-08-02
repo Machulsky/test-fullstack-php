@@ -17,8 +17,7 @@ services:
         - ./src:/var/www
   worker:
       image: digitalocean.com/php
-      container_name: app-worker
-      command: composer install && php workers/TweetCreateListener.php --sleep=3 --tries=3 --daemon
+      command: php workers/TweetCreateListener.php --sleep=3 --tries=3 --daemon
       volumes:
         - ./src:/var/www
       restart: always
@@ -28,7 +27,7 @@ services:
         REDIS_PORT: &redis-port1 6379
       depends_on:
           - mysqldb
-          - redis
+          - fpm
   nodejs:
       command: node socket.js
       working_dir: /var/www/socket
@@ -38,16 +37,13 @@ services:
         REDIS_HOST: redis
         REDIS_PORT: &redis-port2 6379
       ports:
-        - 3000:3000
+        - 3023:3000
       volumes:
         - ./src/socket:/var/www/socket
         - ./src/socket/node_modules:/var/www/socket/node_modules
-      depends_on:
-        - redis
 
   fpm:
       image: digitalocean.com/php
-      container_name: app
       build:
         context: .
         dockerfile: docker/Fpm.Dockerfile
@@ -63,7 +59,6 @@ services:
           - redis
   redis:
       image: redis:alpine
-      container_name: redis
       command: redis-server
       volumes:
           - ./data/redis:/data
