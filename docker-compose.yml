@@ -68,8 +68,6 @@ services:
   mysqldb:
         image: mysql:5.7.22
         restart: always
-        env_file:
-            - ".env"
         environment:
             - MYSQL_DATABASE=test
             - MYSQL_ROOT_PASSWORD=root
