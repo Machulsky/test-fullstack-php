@@ -13,5 +13,8 @@
             "Framework\\": "framework"
         }
         
+    },
+    "require": {
+        "predis/predis": "^1.1"
     }
 }

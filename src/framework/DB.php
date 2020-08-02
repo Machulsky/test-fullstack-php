@@ -12,9 +12,17 @@ class DB{
 
     }
 
-    public function query($sql = '')
+    public function query($sql = '', $data = [])
     {
-        return $this->conn->exec($sql);
+        $sth = $this->conn->prepare($sql);
+        $sth->execute($data);
+        return $sth->fetchAll(PDO::FETCH_OBJ);
+        
+    }
+
+    public function lastInsertId()
+    {
+        
     }
 
     public function getConn()

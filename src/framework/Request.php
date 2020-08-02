@@ -21,8 +21,14 @@ class Request {
 
        stristr($_SERVER['REQUEST_URI'], '?', true) ? $path = stristr($_SERVER['REQUEST_URI'], '?', true) : $path = $_SERVER['REQUEST_URI'];
        
-        $path = rtrim($path, '/');
+        //$path = rtrim($path, '/');
         return $path;
+    }
+
+    public static function filterUri($uri)
+    {
+        
+        return $uri;
     }
 
     public function path()

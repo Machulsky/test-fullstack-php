@@ -44,7 +44,5 @@ RUN addgroup -g 2200 www
 RUN adduser -u 2200 -G www www -D
 
 COPY --chown=www:www . /var/www/
-# RUN chmod -R 777 /var/www/logs
 
-RUN php database/migrate.php
 USER www

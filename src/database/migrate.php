@@ -13,6 +13,7 @@ unset($files[1]);
 
 foreach($files as $file){
     $sql = file_get_contents(__DIR__.'/migrations/'.$file);
-    
-    $db->query($sql);
+    var_dump($sql);
+    var_dump($db->query($sql));
+    sleep(2);
 }

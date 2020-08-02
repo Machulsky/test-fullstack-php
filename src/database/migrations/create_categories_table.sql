@@ -3,3 +3,4 @@ CREATE TABLE categories (
     Title varchar(255) NOT NULL,
     PRIMARY KEY (Id)
 );
+

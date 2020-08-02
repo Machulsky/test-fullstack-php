@@ -1,6 +1,6 @@
 <?php
 
-define('DB_HOST', 'mysql');
+define('DB_HOST', 'mysqldb');
 
 define('DB_PORT', '3306');
 

@@ -12,6 +12,12 @@ $routes = [
         'url' => '/tweets', 
         'dispatch' => 'TweetsController@create' 
     ],
+
+    [
+        'method' => 'GET',
+        'url' => '/categories',
+        'dispatch' => 'CategoriesController@index' 
+    ],
 ];
 
 return $routes;

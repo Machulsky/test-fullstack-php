@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit264e1f0d1eec0894117c1cd66a90b758
 {
     public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'Predis\\' => 7,
+        ),
         'F' => 
         array (
             'Framework\\' => 10,
@@ -18,6 +22,10 @@ class ComposerStaticInit264e1f0d1eec0894117c1cd66a90b758
     );
 
     public static $prefixDirsPsr4 = array (
+        'Predis\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/predis/predis/src',
+        ),
         'Framework\\' => 
         array (
             0 => __DIR__ . '/../..' . '/framework',
@@ -28,23 +36,11 @@ class ComposerStaticInit264e1f0d1eec0894117c1cd66a90b758
         ),
     );
 
-    public static $classMap = array (
-        'App\\App' => __DIR__ . '/../..' . '/app/App.php',
-        'App\\Entities\\Tweet' => __DIR__ . '/../..' . '/app/Entities/Tweet.php',
-        'App\\Http\\Controllers\\TweetsController' => __DIR__ . '/../..' . '/app/Http/Controllers/TweetsController.php',
-        'Framework\\BaseEntity' => __DIR__ . '/../..' . '/framework/Entity.php',
-        'Framework\\Controller' => __DIR__ . '/../..' . '/framework/Controller.php',
-        'Framework\\DB' => __DIR__ . '/../..' . '/framework/DB.php',
-        'Framework\\Request' => __DIR__ . '/../..' . '/framework/Request.php',
-        'Framework\\Router' => __DIR__ . '/../..' . '/framework/Router.php',
-    );
-
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit264e1f0d1eec0894117c1cd66a90b758::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit264e1f0d1eec0894117c1cd66a90b758::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit264e1f0d1eec0894117c1cd66a90b758::$classMap;
 
         }, null, ClassLoader::class);
     }

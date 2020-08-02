@@ -1,7 +1,7 @@
 <?php
 
 define('ROUTES_DIR', __DIR__.'/../routes/');
-
+define('CLIENT_DIR', __DIR__.'/../client/');
 require __DIR__.'/../vendor/autoload.php';
 
 

@@ -6,12 +6,4 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'App\\App' => $baseDir . '/app/App.php',
-    'App\\Entities\\Tweet' => $baseDir . '/app/Entities/Tweet.php',
-    'App\\Http\\Controllers\\TweetsController' => $baseDir . '/app/Http/Controllers/TweetsController.php',
-    'Framework\\BaseEntity' => $baseDir . '/framework/Entity.php',
-    'Framework\\Controller' => $baseDir . '/framework/Controller.php',
-    'Framework\\DB' => $baseDir . '/framework/DB.php',
-    'Framework\\Request' => $baseDir . '/framework/Request.php',
-    'Framework\\Router' => $baseDir . '/framework/Router.php',
 );

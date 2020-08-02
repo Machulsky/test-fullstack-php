@@ -18,19 +18,22 @@ class Router {
         $routesDir = scandir( ROUTES_DIR );
         unset($routesDir[0]);
         unset($routesDir[1]);
+       
         foreach($routesDir as $routesFile){
             $routes = require_once ROUTES_DIR.$routesFile;
             $this->routes = array_merge($routes, $this->routes);
         }
+
+        
     }
 
     public function match(Request $request)
     {
        
-
+        
         foreach($this->routes as $route){
             
-            if($route['url'] == $request->path() && strtoupper($route['method']) == strtoupper($request->method())){
+            if(Request::filterUri($route['url']) == $request->path() && strtoupper($route['method']) == strtoupper($request->method())){
                 $controller = 'App\Http\Controllers';
                 $controller .= '\\'.stristr($route['dispatch'], '@', true);
                 $action = str_replace('@', '', stristr($route['dispatch'], '@'));

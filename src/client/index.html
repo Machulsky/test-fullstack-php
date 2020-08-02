@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- production version, optimized for size and speed -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css" integrity="sha256-gsmEoJAws/Kd3CjuOQzLie5Q3yshhvmo7YNtBG7aaEY=" crossorigin="anonymous">   
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        
+        
+      
+      </div>
+</body>
+<script>
+const socket = io(':3000')
+
+ const tweets = Vue.component('tweets', {
+  template: `
+    <div>
+        <div class="container">
+            <div class="row justify-content-center mt-5">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Добавить твит
+                            </h5>
+                            <form class="form" v-on:submit.prevent="createTweet">
+                                <textarea  name="Content" class="form-control" placeholder="Введите текст..."></textarea>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">
+                                        <input type="text" name="Username" class="form-control" placeholder="Введите имя">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" name="CategoryId">
+                                          
+                                            <option v-for="category in categories" :value="category.Id">{{category.Title}}</option>    
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <button class="btn btn-primary btn-block" >Отправить</button>
+                                    </div>    
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="card mt-2" v-for="tweet in tweets">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {{ tweet.Category }}
+                            </h5>
+                            <p class="card-text">
+                                {{ tweet.Content }}
+                            </p>
+                           
+                           
+                            
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <i class="fa fa-user"></i> {{ tweet.Username }}
+                                </div>    
+                                <div class="col-md-4">
+                                    <i class="fa fa-calendar"></i> {{ moment(new Date(tweet.CreatedAt*1000)).format("DD/MM/YYYY HH:mm:ss") }}
+                                </div>   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+  `,
+
+  data: function () {
+    return {
+      tweets: [],
+      categories: [],
+     
+       
+          
+    
+    }
+  },
+  mounted () {
+    socket.on('tweets:create', (data) => {
+        console.log(data)
+        this.tweets.unshift(JSON.parse(data))
+    })
+    axios.get('/tweets')
+    .then(response => {
+        this.tweets = response.data.data
+    })
+
+    axios.get('/categories')
+    .then(response => {
+        this.categories = response.data.data
+    })
+  },
+
+  methods: {
+        createTweet: (event) => {
+           
+            axios.post('/tweets', {
+                Username: event.target.Username.value,
+                Content: event.target.Content.value,
+                CategoryId: event.target.CategoryId.value
+            })
+            .then(response => {
+                console.log(response.data.data)
+            })
+
+            
+        }
+  }
+})
+
+
+new Vue({
+  el: '#app',
+    render: h => h(tweets)
+})
+</script>
+</html>
